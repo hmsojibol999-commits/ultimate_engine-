@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.venv/
+env/
+.env
+workspace/
+model_cache/
+.cache/
+playwright/.cache/
+*.sqlite-wal
+*.sqlite-shm

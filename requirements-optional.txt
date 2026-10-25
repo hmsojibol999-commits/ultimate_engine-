@@ -1,0 +1,12 @@
+# Optional integrations only. Review accelerator compatibility before installation.
+PyMuPDF>=1.24,<2
+playwright>=1.47,<2
+transformers>=4.44,<5
+accelerate>=0.34,<2
+bitsandbytes>=0.44; platform_system == "Linux"
+sentencepiece>=0.2,<1
+pytesseract>=0.3,<1
+Pillow>=10,<13
+rapidfuzz>=3.9,<4
+curl_cffi>=0.7,<1
+llama-cpp-python>=0.3,<1
