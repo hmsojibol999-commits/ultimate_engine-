@@ -1,0 +1,34 @@
+@import './design/tokens.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root { height: 100%; margin: 0; }
+body {
+  background: var(--bg-0); color: var(--text); font-family: var(--font-ui);
+  overflow: hidden; -webkit-tap-highlight-color: transparent; overscroll-behavior: none;
+}
+*, *::before, *::after { box-sizing: border-box; }
+
+/* Shared interactive states: default, hover (soft glow), pressed (scale .97), disabled, focus ring. */
+.sg-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2);
+  min-height: 44px; min-width: 44px; padding: 0 var(--sp-4);
+  border: 1px solid var(--border); border-radius: var(--r-2);
+  background: var(--glass); color: var(--text); cursor: pointer; font: inherit;
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
+}
+@media (hover: hover) { .sg-btn:hover:not(:disabled) { box-shadow: var(--glow); } }
+.sg-btn:active:not(:disabled) { transform: scale(0.97); }
+.sg-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.sg-glass {
+  background: var(--glass); border: 1px solid var(--border);
+  backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Character portraits (C-01): the injected <svg> fills its wrapper. */
+.sg-portrait { display: inline-block; line-height: 0; flex: none; }
+.sg-portrait svg { width: 100%; height: 100%; display: block; }

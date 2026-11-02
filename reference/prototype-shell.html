@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shadow-Grid</title>
+<style>
+:root{--bg0:#05070d;--bg1:#0b0f19;--bg2:#111827;--glass:rgba(15,23,42,.72);--bd:rgba(0,243,255,.18);--ac:#00f3ff;--ac2:#3b82f6;--ok:#34d399;--bad:#f87171;--tx:#e6f1ff;--dim:#8aa0b8;--r:10px;--t:160ms;
+color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root{color-scheme:dark}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{height:100%;margin:0}
+*{box-sizing:border-box}
+body{background:radial-gradient(1200px 700px at 70% -10%,#0d1a2e,var(--bg0));color:var(--tx);font:15px/1.5 system-ui,"Noto Sans Bengali","Segoe UI",sans-serif;overflow:hidden}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+#desk{position:absolute;inset:0 0 52px 0;padding:14px}
+.icons{display:grid;grid-template-columns:repeat(auto-fill,84px);gap:10px;align-content:start}
+.ico{background:none;border:1px solid transparent;border-radius:var(--r);padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12.5px;text-align:center;transition:var(--t)}
+.ico:hover,.ico:active{background:var(--glass);border-color:var(--bd)}
+.ico i{font-style:normal;font-size:26px;width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:var(--bg2);border:1px solid var(--bd)}
+.win{position:absolute;background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--bd);border-radius:12px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.5);min-width:260px;min-height:180px;resize:both}
+.win.on{border-color:rgba(0,243,255,.5);box-shadow:0 0 0 1px rgba(0,243,255,.25),0 18px 50px rgba(0,0,0,.55)}
+.win.min{display:none}
+.bar{display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(5,7,13,.5);border-bottom:1px solid var(--bd);touch-action:none;cursor:grab;user-select:none}
+.bar b{flex:1;font-weight:600;font-size:14px}
+.bar button{background:none;border:0;width:30px;height:30px;border-radius:8px;color:var(--dim)}
+.bar button:hover{background:var(--bg2);color:var(--tx)}
+.body{flex:1;overflow:auto;padding:10px;display:flex;flex-direction:column;gap:8px;min-height:0}
+textarea,input{width:100%;background:var(--bg1);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px;font:13px/1.45 ui-monospace,Menlo,Consolas,monospace}
+textarea{flex:1;min-height:110px;resize:none}
+.btn{background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:7px 12px;transition:var(--t)}
+.btn:hover{border-color:var(--ac)}.btn:active{transform:scale(.97)}
+.btn.p{background:var(--ac);color:#031014;border-color:var(--ac);font-weight:600}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+iframe{flex:1;min-height:140px;width:100%;border:1px solid var(--bd);border-radius:8px;background:#fff}
+.tree{font:13px/1.6 ui-monospace,Menlo,Consolas,monospace}
+.tree details{margin-left:14px}.tree summary{cursor:pointer;color:var(--ac)}
+.tree .k{color:var(--ac2)}.tree .v{color:var(--ok)}.tree .lf{margin-left:14px}
+.err{color:var(--bad);font-size:13px}
+.term{font:13px/1.6 ui-monospace,Menlo,Consolas,monospace;flex:1;overflow:auto;background:var(--bg1);border:1px solid var(--bd);border-radius:8px;padding:8px}
+.term .s{color:var(--dim)}.term .g{color:var(--ac)}
+#tb{position:absolute;left:0;right:0;bottom:0;height:calc(52px + env(safe-area-inset-bottom,0px));padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--bd);display:flex;gap:6px;align-items:center;z-index:9999}
+#tasks{flex:1;display:flex;gap:6px;overflow-x:auto}
+#tasks .btn{white-space:nowrap;padding:6px 10px;font-size:13px}#tasks .btn.on{border-color:var(--ac)}
+#menu{position:absolute;left:8px;bottom:calc(60px + env(safe-area-inset-bottom,0px));width:min(300px,calc(100% - 16px));background:var(--bg1);border:1px solid var(--bd);border-radius:12px;padding:10px;display:none;z-index:9998;box-shadow:0 18px 50px rgba(0,0,0,.6)}
+#menu.open{display:block}
+#menu .item{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;padding:9px;border-radius:8px}
+#menu .item:hover{background:var(--bg2)}
+.hire{margin-top:8px;padding:10px;border:1px dashed var(--bd);border-radius:8px;font-size:13px;color:var(--dim)}
+#clk{color:var(--dim);font-size:13px;padding:0 4px}
+.dim{color:var(--dim);font-size:13px}
+@media (max-width:640px){.win{resize:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="desk"><div class="icons" id="icons"></div></div>
+<div id="menu" role="menu"></div>
+<div id="tb"><button class="btn p" id="st"></button><div id="tasks"></div><button class="btn" id="lg" aria-label="Language">বাংলা</button><span id="clk"></span></div>
+<script>
+const $=(s,e=document)=>e.querySelector(s);
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.textContent=h;return e};
+const OWNER={name:"OWNER_NAME (TODO)",contact:"contact details (TODO)"};
+const T={
+en:{start:"Start",prev:"Live Preview",json:"JSON Viewer",grid:"GRID helper",about:"About",run:"Run",fmt:"Load sample",bad:"Not valid JSON: ",ask:"Ask what you want to do…",send:"Ask",
+ hello:"Welcome to Shadow-Grid. Everything here runs in your browser.",none:"I’m a simple rule-based helper in this prototype. Try “html”, “json” or “hire”.",
+ open:"Opening ",abt:"Prototype slice of Shadow-Grid: window manager, two tools and a rule-based helper. Not the full OS.",hire:"Need a tool or app built?",pasteJ:"Paste JSON here",pasteH:"Edit this page, then press Run",
+ close:"Close",min:"Minimize",empty:"Nothing to show yet. Load the sample to try it."},
+bn:{start:"শুরু",prev:"লাইভ প্রিভিউ",json:"JSON ভিউয়ার",grid:"GRID সহায়ক",about:"পরিচিতি",run:"চালান",fmt:"নমুনা দিন",bad:"JSON সঠিক নয়: ",ask:"কী করতে চান লিখুন…",send:"জিজ্ঞাসা",
+ hello:"Shadow-Grid-এ স্বাগতম। সবকিছু আপনার ব্রাউজারেই চলে।",none:"এই প্রোটোটাইপে আমি একটি সাধারণ নিয়মভিত্তিক সহায়ক। “html”, “json” বা “hire” লিখে দেখুন।",
+ open:"খুলছি: ",abt:"এটি Shadow-Grid-এর প্রোটোটাইপ অংশ: উইন্ডো ম্যানেজার, দুটি টুল ও একটি সহায়ক। পূর্ণ OS নয়।",hire:"কোনো টুল বা অ্যাপ বানাতে চান?",pasteJ:"এখানে JSON পেস্ট করুন",pasteH:"পেজটি বদলান, তারপর চালান চাপুন",
+ close:"বন্ধ",min:"ছোট করুন",empty:"এখনও কিছু নেই। নমুনা দিয়ে চেষ্টা করুন."}};
+let L="en";try{L=localStorage.getItem("sg-lang")||((navigator.language||"").startsWith("bn")?"bn":"en")}catch(e){}
+const t=k=>T[L][k];
+const SAMPLE_J='{"name":"Shadow-Grid","free":true,"apps":["preview","json"],"owner":{"name":"you","tags":[1,2,3]}}';
+const SAMPLE_H='<h1 style="font-family:sans-serif">Hello 👋</h1>\n<p>Edit me and press Run.</p>\n<button onclick="this.textContent=\'Clicked\'">Click</button>';
+const APPS={
+ prev:{icon:"🌐",build(b){const ta=el("textarea");ta.value=SAMPLE_H;ta.setAttribute("aria-label",t("pasteH"));const f=el("iframe");f.setAttribute("sandbox","allow-scripts allow-forms allow-modals allow-popups");f.title=t("prev");
+  const go=()=>{f.srcdoc=ta.value};const r=el("div","row");const bt=el("button","btn p",t("run"));bt.onclick=go;r.append(bt);b.append(ta,r,f);go()}},
+ json:{icon:"{ }",build(b){const ta=el("textarea");ta.placeholder=t("pasteJ");ta.setAttribute("aria-label",t("pasteJ"));const out=el("div","tree"),er=el("div","err");
+  const node=(k,v)=>{if(v&&typeof v==="object"){const d=el("details");d.open=true;const s=el("summary");s.textContent=(k!=null?k+": ":"")+(Array.isArray(v)?"["+v.length+"]":"{"+Object.keys(v).length+"}");d.append(s);for(const[kk,vv]of Object.entries(v))d.append(node(kk,vv));return d}
+   const d=el("div","lf");const a=el("span","k",k!=null?k+": ":"");const c=el("span","v",JSON.stringify(v));d.append(a,c);return d};
+  const draw=()=>{out.replaceChildren();er.textContent="";if(!ta.value.trim()){out.append(el("div","dim",t("empty")));return}
+   try{out.append(node(null,JSON.parse(ta.value)))}catch(e){er.textContent=t("bad")+e.message}};
+  ta.oninput=draw;const r=el("div","row");const bt=el("button","btn",t("fmt"));bt.onclick=()=>{ta.value=SAMPLE_J;draw()};r.append(bt);b.append(ta,r,er,out);draw()}},
+ grid:{icon:"◈",build(b){const log=el("div","term");const add=(c,x)=>{const p=el("div");p.append(el("span",c,x));log.append(p);log.scrollTop=log.scrollHeight};
+  add("s","[GRID] "+t("hello"));const i=el("input");i.placeholder=t("ask");i.setAttribute("aria-label",t("ask"));
+  const send=()=>{const q=i.value.trim().toLowerCase();if(!q)return;add("g","> "+i.value);i.value="";
+   const m=[["prev",/html|preview|page|css|প্রিভিউ|পেজ/],["json",/json|graph|tree/],["about",/hire|contact|about|build|যোগাযোগ/]].find(x=>x[1].test(q));
+   if(m){add("s","[GRID] "+t("open")+t(m[0]));openApp(m[0])}else add("s","[GRID] "+t("none"))};
+  i.onkeydown=e=>{if(e.key==="Enter")send()};const bt=el("button","btn p",t("send"));bt.onclick=send;const r=el("div","row");r.style.flexWrap="nowrap";r.append(i,bt);b.append(log,r)}},
+ about:{icon:"i",build(b){b.append(el("p","",t("abt")),el("div","hire",t("hire")+" "+OWNER.name+" · "+OWNER.contact))}}
+};
+const wins={};let z=10,n=0;
+function focusW(id){for(const k in wins)wins[k].e.classList.toggle("on",k===id);const w=wins[id];if(w){w.e.style.zIndex=++z;}tasks()}
+function openApp(id){$("#menu").classList.remove("open");if(wins[id]){wins[id].e.classList.remove("min");focusW(id);return}
+ const w=el("div","win");w.setAttribute("role","dialog");const bar=el("div","bar");const ti=el("b","",t(id));
+ const mn=el("button","",'–');mn.setAttribute("aria-label",t("min"));const cl=el("button","",'✕');cl.setAttribute("aria-label",t("close"));bar.append(ti,mn,cl);
+ const body=el("div","body");w.append(bar,body);$("#desk").append(w);APPS[id].build(body);
+ const dw=innerWidth,dh=innerHeight-52,small=dw<=640;
+ if(small){Object.assign(w.style,{left:"6px",top:"6px",width:dw-12+"px",height:dh-12+"px"})}
+ else{const ww=Math.min(460,dw-40),hh=Math.min(420,dh-40);Object.assign(w.style,{width:ww+"px",height:hh+"px",left:40+(n%6)*34+"px",top:30+(n%6)*30+"px"})}n++;
+ wins[id]={e:w,ti};w.addEventListener("pointerdown",()=>focusW(id));
+ bar.addEventListener("pointerdown",e=>{if(e.target.closest("button")||small)return;const sx=e.clientX-w.offsetLeft,sy=e.clientY-w.offsetTop;bar.setPointerCapture(e.pointerId);bar.style.cursor="grabbing";
+  const mv=ev=>{w.style.left=Math.max(0,Math.min(innerWidth-80,ev.clientX-sx))+"px";w.style.top=Math.max(0,Math.min(innerHeight-120,ev.clientY-sy))+"px"};
+  const up=()=>{bar.style.cursor="";bar.removeEventListener("pointermove",mv);bar.removeEventListener("pointerup",up)};bar.addEventListener("pointermove",mv);bar.addEventListener("pointerup",up)});
+ mn.onclick=()=>{w.classList.add("min");tasks()};cl.onclick=()=>{w.remove();delete wins[id];tasks()};focusW(id)}
+function tasks(){const T_=$("#tasks");T_.replaceChildren();for(const id in wins){const b=el("button","btn"+(wins[id].e.classList.contains("on")&&!wins[id].e.classList.contains("min")?" on":""),t(id));b.onclick=()=>{const w=wins[id].e;if(w.classList.contains("min")||!w.classList.contains("on")){w.classList.remove("min");focusW(id)}else{w.classList.add("min");tasks()}};T_.append(b)}}
+function chrome(){document.documentElement.lang=L;$("#st").textContent=t("start");$("#lg").textContent=L==="en"?"বাংলা":"EN";
+ const ic=$("#icons");ic.replaceChildren();const m=$("#menu");m.replaceChildren();
+ for(const id in APPS){const b=el("button","ico");b.append(el("i","",APPS[id].icon),el("span","",t(id)));b.onclick=()=>openApp(id);ic.append(b);
+  const it=el("button","item");it.setAttribute("role","menuitem");it.append(el("span","",APPS[id].icon),el("span","",t(id)));it.onclick=()=>openApp(id);m.append(it)}
+ m.append(el("div","hire",t("hire")+" "+OWNER.name));for(const id in wins)wins[id].ti.textContent=t(id);tasks()}
+$("#st").onclick=e=>{e.stopPropagation();$("#menu").classList.toggle("open")};
+addEventListener("pointerdown",e=>{if(!e.target.closest("#menu,#st"))$("#menu").classList.remove("open")});
+$("#lg").onclick=()=>{L=L==="en"?"bn":"en";try{localStorage.setItem("sg-lang",L)}catch(e){}
+ const open=Object.keys(wins),pos=open.map(k=>[wins[k].e.style.cssText,wins[k].e.classList.contains("min")]);open.forEach(k=>{wins[k].e.remove();delete wins[k]});chrome();open.forEach((k,i)=>{openApp(k);wins[k].e.style.cssText=pos[i][0];wins[k].e.classList.toggle("min",pos[i][1])});tasks()};
+setInterval(()=>{$("#clk").textContent=new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})},1000);
+$("#clk").textContent=new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
+chrome();
+const h=location.hash.match(/^#open=(\w+)/);if(h&&APPS[h[1]])openApp(h[1]);
+</script>
+</body>
+</html>

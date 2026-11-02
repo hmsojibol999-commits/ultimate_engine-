@@ -1,0 +1,51 @@
+/* Design tokens (spec section 7). Themes switch via [data-theme] on <html>. */
+:root,
+:root[data-theme='neon-cyan'] {
+  --bg-0: #05070d; --bg-1: #0b0f19; --bg-2: #111827;
+  --glass: rgba(15, 23, 42, 0.62); --glass-blur: 14px;
+  --border: rgba(0, 243, 255, 0.18);
+  --accent: #00f3ff; --accent-2: #3b82f6; --accent-3: #a78bfa;
+  --success: #34d399; --warning: #fbbf24; --danger: #f87171;
+  --text: #e6f1ff; --text-dim: #8aa0b8;
+  --glow: 0 0 0 1px var(--accent), 0 0 14px rgba(0, 243, 255, 0.35);
+
+  --dur-fast: 120ms; --dur-base: 220ms; --dur-slow: 420ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* 4px spacing scale and one radius scale */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-6: 24px; --sp-8: 32px;
+  --r-1: 6px; --r-2: 10px; --r-3: 16px;
+  --taskbar-h: 48px; --switcher-h: 56px;
+
+  --font-ui: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans Bengali', 'Hind Siliguri', 'Kalpurush', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  color-scheme: dark;
+}
+:root[data-theme='deep-violet'] {
+  --bg-0: #07050f; --bg-1: #0f0b1d; --bg-2: #1a1330;
+  --border: rgba(167, 139, 250, 0.25);
+  --accent: #a78bfa; --accent-2: #7c9cff; --accent-3: #f0abfc;
+  --glow: 0 0 0 1px var(--accent), 0 0 14px rgba(167, 139, 250, 0.4);
+}
+:root[data-theme='matrix-green'] {
+  --bg-0: #020a05; --bg-1: #061209; --bg-2: #0b1d10;
+  --border: rgba(52, 211, 153, 0.25);
+  --accent: #34d399; --accent-2: #22c55e; --accent-3: #a3e635;
+  --glow: 0 0 0 1px var(--accent), 0 0 14px rgba(52, 211, 153, 0.4);
+}
+:root[data-theme='high-contrast'] {
+  --bg-0: #000; --bg-1: #000; --bg-2: #0a0a0a;
+  --glass: rgba(0, 0, 0, 0.92); --glass-blur: 0px;
+  --border: #ffffff;
+  --accent: #ffe600; --accent-2: #7dd3fc; --accent-3: #f9a8d4;
+  --text: #ffffff; --text-dim: #d4d4d4;
+  --glow: 0 0 0 3px var(--accent);
+}
+
+/* Reduced motion and Low-power mode: near-zero durations, no wallpaper effects. */
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-fast: 1ms; --dur-base: 1ms; --dur-slow: 1ms; }
+}
+:root[data-lowpower='true'] { --dur-fast: 1ms; --dur-base: 60ms; --dur-slow: 120ms; --glass-blur: 0px; }
+:root[data-lowpower='true'] .sg-wallpaper-canvas { display: none; }
